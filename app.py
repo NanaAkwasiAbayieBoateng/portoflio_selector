@@ -30,8 +30,8 @@ default_end_date  = dt.datetime(dt.date.today().year, dt.date.today().month, dt.
 start =   st.text_input("Enter start date", value="", max_chars= 10, placeholder= default_start_date, disabled=False, label_visibility="visible")
 end =     st.text_input("Enter start date", value="", max_chars= 10, placeholder= default_end_date, disabled=False, label_visibility="visible")
 
-start = '2024-01-01'
-end  = '2024-06-30'
+#start = '2024-01-01'
+#end  = '2024-06-30'
 
 
 
