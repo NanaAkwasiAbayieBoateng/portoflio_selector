@@ -14,6 +14,11 @@ stock_industry_selected = st.selectbox('Select Stock Industry 1', ['Industrials'
        'Utilities', 'Financials', 'Materials', 'Consumer_Discretionary',
        'Real_Estate', 'Communication_Services', 'Consumer_Staples',
        'Energy'])
+       
+tickers_selected = st.text_input("Enter stock indices (comma-separated):", value="", max_chars= 1000, placeholder= 'AAPL', disabled=False, label_visibility="visible")
+
+tickers_selected_list = tickers_selected.split(",")
+       
 
 
 look_back_years = 1
@@ -25,13 +30,15 @@ default_end_date  = dt.datetime(dt.date.today().year, dt.date.today().month, dt.
 start =   st.text_input("Enter start date", value="", max_chars= 10, placeholder= default_start_date, disabled=False, label_visibility="visible")
 end =     st.text_input("Enter start date", value="", max_chars= 10, placeholder= default_end_date, disabled=False, label_visibility="visible")
 
-start = '2024-01-01'
-end  = '2024-06-30'
+#start = '2024-01-01'
+#end  = '2024-06-30'
+
+
 
 data = pd.DataFrame()
 return_df  = pd.DataFrame()
 
-def get_stock(stock_type,stock_industry):
+def get_stock(stock_type,stock_industry=None,tickers=None):
     if stock_type == 'S & P 500 Stocks':
        #retrieve table of list of companies on  s & p 500
        url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
@@ -183,6 +190,20 @@ def get_stock(stock_type,stock_industry):
             except:
      
                 pass   
+
+    elif stock_type == 'Broad Market':
+        
+        try:
+           for ticker in  tickers:
+                df = yf.download(ticker, start=start, end=end)['Adj Close']
+                rf =  (df.pct_change() + 1).cumprod()-1
+                if len(df) > 0:
+                    data[ticker] = df
+                    return_df[ticker]  = rf*100  
+
+        except:
+     
+            pass     
            
     return return_df
 
@@ -190,11 +211,9 @@ def get_stock(stock_type,stock_industry):
 
 
 
-
-
 # Create a dropdown menu to choose the graph type
 graph_type = st.selectbox('Select Graph Type 1', ['Bar Chart', 'Line Chart'])
-return_df = get_stock(stock_type_selected,stock_industry_selected)
+return_df = get_stock(stock_type_selected,stock_industry_selected,tickers_selected_list)
 d = return_df.mean().reset_index().rename(columns= {'index':'Stock',0:'Mean_Return'}).sort_values(by='Mean_Return',ascending=False)
 
 # Create a function to generate the graph
