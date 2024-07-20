@@ -16,9 +16,9 @@ stock_industry_selected = st.selectbox('Select Stock Industry 1', ['Industrials'
        'Energy'])
        
 tickers_selected = st.text_input("Enter stock indices (comma-separated):", value="", max_chars= 1000, placeholder= 'AAPL', disabled=False, label_visibility="visible")
-
 tickers_selected_list = tickers_selected.split(",")
-       
+
+ 
 
 
 look_back_years = 1
@@ -37,6 +37,10 @@ end =     st.text_input("Enter start date", value="", max_chars= 10, placeholder
 
 data = pd.DataFrame()
 return_df  = pd.DataFrame()
+
+
+
+
 
 def get_stock(stock_type,stock_industry=None,tickers=None):
     if stock_type == 'S & P 500 Stocks':
@@ -97,18 +101,21 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
             except:
                 pass
         
-       elif stock_industry == Utilities:
-            try:
-               for ticker in Utilities:
-                   df = yf.download(ticker, start=start, end=end)['Adj Close']
-                   rf =  (df.pct_change() + 1).cumprod()-1
-                   if len(df) > 0:
-                      data[ticker] = df
-                      return_df[ticker]  = rf*100
 
-            except:
-                pass
         
+       elif stock_industry == 'Utilities':
+            try:
+                for ticker in Utilities:
+                    df = yf.download(ticker, start=start, end=end)['Adj Close']
+                    rf =  (df.pct_change() + 1).cumprod()-1
+                    if len(df) > 0:
+                       data[ticker] = df
+                       return_df[ticker]  = rf*100
+            except:
+              pass
+       
+       
+       
        elif stock_industry == 'Financials':
             try:
                for ticker in  Financials:
@@ -209,24 +216,39 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
 
 
 
-
-
 # Create a dropdown menu to choose the graph type
 graph_type = st.selectbox('Select Graph Type 1', ['Bar Chart', 'Line Chart'])
 return_df = get_stock(stock_type_selected,stock_industry_selected,tickers_selected_list)
 return_df['Year']  = return_df.index.year.astype(str)
-#return_df = return_df.reset_index()
-#return_df['Year']  =  return_df['Date'].dt.year.astype(str)
-#d = return_df.mean().reset_index().rename(columns= {'index':'Stock',0:'Mean_Return'}).sort_values(by='Mean_Return',ascending=False)
-d = return_df[tickers_selected_list + ['Year']].groupby('Year').mean().reset_index().melt(id_vars ='Year',value_vars=tickers_selected_list)
+
+
+#['S & P 500 Stocks', 'Broad Market'], stock_industry_selected
+if  stock_type_selected == 'S & P 500 Stocks':
+    
+    #return_df.drop('Date',axis=1,inplace=True)
+    return_df.reset_index(drop=True, inplace=True)
+    stock_list =  list(set(return_df.columns).difference('Year'))
+    #d = return_df.drop('Year',axis=1).mean().reset_index().rename(columns= {'index':'Stock',0:'Mean_Return'}).sort_values(by='Mean_Return',ascending=False)
+    #d = return_df[list(stock_industry_selected) + ['Year']].groupby('Year').mean().reset_index().melt(id_vars ='Year',value_vars=list(stock_industry_selected))
+    d = return_df.groupby('Year').mean().reset_index().melt(id_vars ='Year',value_vars= stock_list)
+else:
+    #tickers_selected_list = tickers_selected
+    d = return_df[list(tickers_selected_list) + ['Year']].groupby('Year').mean().reset_index().melt(id_vars ='Year',value_vars= list(tickers_selected_list))
+
+
 
 # Create a function to generate the graph
 def generate_graph(graph_type):
     if graph_type == 'Bar Chart':
         
-        #fig = px.bar(d, x="Stock", y="Mean_Return", orientation='v',title= f"Mean Return Between {start} to {end}", color="Stock",color_discrete_sequence=px.colors.qualitative.Set1)
-        fig = px.bar(d, x="Year", y="value", orientation='v',title= f"Mean Return Between {start} to {end}", color="variable",color_discrete_sequence=px.colors.qualitative.Set1, barmode="group")
-        fig.update_layout(yaxis_title="Mean Return (%)")
+        if stock_type_selected == 'S & P 500 Stocks':
+            #fig = px.bar(d, x="Stock", y="Mean_Return", orientation='v',title= f"Mean Return Between {start} to {end}", color="Stock",color_discrete_sequence=px.colors.qualitative.Set1)
+            fig = px.bar(d, x="Year", y="value", orientation='v',title= f"Mean Return Between {start} to {end}", color="variable",color_discrete_sequence=px.colors.qualitative.Set1, barmode="group")
+            fig.update_layout(yaxis_title="Mean Return (%)")            
+        
+        else:
+            fig = px.bar(d, x="Year", y="value", orientation='v',title= f"Mean Return Between {start} to {end}", color="variable",color_discrete_sequence=px.colors.qualitative.Set1, barmode="group")
+            fig.update_layout(yaxis_title="Mean Return (%)")
 
     elif graph_type == 'Line Chart':
         fig=return_df[tickers_selected_list].plot(color_discrete_sequence=px.colors.qualitative.Set1,title= f"Mean Return Between {start} to {end}")
@@ -247,7 +269,7 @@ st.plotly_chart(fig, use_container_width=True)
 
 # Create a Streamlit app
 #st.title('Returns Chart')
-#st.write('Select a graph type to display:')
+#st.write(f'{tickers_selected_list + ['Year']}')
 #graph_type_selected = st.selectbox('Select Graph Type 2', ['Bar Chart', 'Line Chart', 'Scatter Plot'])
 #fig = generate_graph(graph_type_selected)
 
@@ -258,5 +280,7 @@ st.plotly_chart(fig, use_container_width=True)
 # Format y-axis as percentage
 #fig.update_yaxes(tickformat=".0%")
 #st.plotly_chart(fig, use_container_width=True)
-st.dataframe(d.rename(columns={'value':'Mean Return %'}))
+#st.dataframe(d.rename(columns={'value':'Mean Return %'}))
+#st.dataframe(return_df.head())
+st.dataframe(d)
 #fig.show()
