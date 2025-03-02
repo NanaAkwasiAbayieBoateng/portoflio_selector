@@ -65,8 +65,8 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
        if   stock_industry == 'Industrials':
             try:
                for ticker in Industrials:
-                   df = yf.download(ticker, start=start, end=end)['Adj Close']
-                   #df  = pdr.get_data_yahoo(ticker, start, end)['Adj Close'] 
+                   df = yf.download(ticker, start=start, end=end)['Close']
+                   #df  = pdr.get_data_yahoo(ticker, start, end)['Close'] 
                    #cumulative daily return
                    #rf  = df.pct_change().cumsum()
                    rf =  (df.pct_change() + 1).cumprod()-1
@@ -80,7 +80,7 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
        elif stock_industry == 'Health_Care':
             try:
                for ticker in Health_Care:
-                   df = yf.download(ticker, start=start, end=end)['Adj Close']
+                   df = yf.download(ticker, start=start, end=end)['Close']
                    rf =  (df.pct_change() + 1).cumprod()-1
                    if len(df) > 0:
                       data[ticker] = df
@@ -92,7 +92,7 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
        elif stock_industry == 'Information_Technology':
             try:
                for ticker in Information_Technology:
-                   df = yf.download(ticker, start=start, end=end)['Adj Close']
+                   df = yf.download(ticker, start=start, end=end)['Close']
                    rf =  (df.pct_change() + 1).cumprod()-1
                    if len(df) > 0:
                       data[ticker] = df
@@ -106,7 +106,7 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
        elif stock_industry == 'Utilities':
             try:
                 for ticker in Utilities:
-                    df = yf.download(ticker, start=start, end=end)['Adj Close']
+                    df = yf.download(ticker, start=start, end=end)['Close']
                     rf =  (df.pct_change() + 1).cumprod()-1
                     if len(df) > 0:
                        data[ticker] = df
@@ -119,7 +119,7 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
        elif stock_industry == 'Financials':
             try:
                for ticker in  Financials:
-                   df = yf.download(ticker, start=start, end=end)['Adj Close']
+                   df = yf.download(ticker, start=start, end=end)['Close']
                    rf =  (df.pct_change() + 1).cumprod()-1
                    if len(df) > 0:
                       data[ticker] = df
@@ -131,7 +131,7 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
        elif stock_industry == 'Materials':
             try:
                for ticker in  Materials :
-                   df = yf.download(ticker, start=start, end=end)['Adj Close']
+                   df = yf.download(ticker, start=start, end=end)['Close']
                    rf =  (df.pct_change() + 1).cumprod()-1
                    if len(df) > 0:
                       data[ticker] = df
@@ -142,7 +142,7 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
        elif stock_industry == 'Consumer_Discretionary':
             try:
                for ticker in  Consumer_Discretionary:
-                   df = yf.download(ticker, start=start, end=end)['Adj Close']
+                   df = yf.download(ticker, start=start, end=end)['Close']
                    rf =  (df.pct_change() + 1).cumprod()-1
                    if len(df) > 0:
                       data[ticker] = df
@@ -153,7 +153,7 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
        elif stock_industry == 'Real_Estate':
             try:
                for ticker in  Real_Estate:
-                   df = yf.download(ticker, start=start, end=end)['Adj Close']
+                   df = yf.download(ticker, start=start, end=end)['Close']
                    rf =  (df.pct_change() + 1).cumprod()-1
                    if len(df) > 0:
                       data[ticker] = df
@@ -165,7 +165,7 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
        elif stock_industry == 'Communication_Services':
             try:
                for ticker in  Communication_Services:
-                   df = yf.download(ticker, start=start, end=end)['Adj Close']
+                   df = yf.download(ticker, start=start, end=end)['Close']
                    rf =  (df.pct_change() + 1).cumprod()-1
                    if len(df) > 0:
                       data[ticker] = df
@@ -176,7 +176,7 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
        elif stock_industry == 'Consumer_Staples':
             try:
                for ticker in  Consumer_Staples:
-                   df = yf.download(ticker, start=start, end=end)['Adj Close']
+                   df = yf.download(ticker, start=start, end=end)['Close']
                    rf =  (df.pct_change() + 1).cumprod()-1
                    if len(df) > 0:
                       data[ticker] = df
@@ -188,7 +188,7 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
        elif stock_industry == 'Energy':
             try:
                for ticker in  Energy:
-                   df = yf.download(ticker, start=start, end=end)['Adj Close']
+                   df = yf.download(ticker, start=start, end=end)['Close']
                    rf =  (df.pct_change() + 1).cumprod()-1
                    if len(df) > 0:
                       data[ticker] = df
@@ -202,7 +202,7 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
         
         try:
            for ticker in  tickers:
-                df = yf.download(ticker, start=start, end=end)['Adj Close']
+                df = yf.download(ticker, start=start, end=end)['Close']
                 rf =  (df.pct_change() + 1).cumprod()-1
                 if len(df) > 0:
                     data[ticker] = df
