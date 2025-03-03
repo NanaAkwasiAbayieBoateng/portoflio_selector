@@ -30,210 +30,190 @@ default_end_date  = dt.datetime(dt.date.today().year, dt.date.today().month, dt.
 start =   st.text_input("Enter start date", value="", max_chars= 10, placeholder= default_start_date, disabled=False, label_visibility="visible")
 end =     st.text_input("Enter start date", value="", max_chars= 10, placeholder= default_end_date, disabled=False, label_visibility="visible")
 
-#start = '2024-01-01'
-#end  = '2024-06-30'
-
-
-
-data = pd.DataFrame()
-return_df  = pd.DataFrame()
-
-
+#start = '2025-01-01'
+#end  = '2025-01-15'
 
 
 
 def get_stock(stock_type,stock_industry=None,tickers=None):
+    return_data = []
+    download_data = []
     if stock_type == 'S & P 500 Stocks':
        #retrieve table of list of companies on  s & p 500
-       url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
-       df = pd.read_html(url)
+        url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
+        df = pd.read_html(url)
        #sectors of economy
-       Industrials  = df[0]['Symbol'][df[0]['GICS Sector'].str.contains(pat='Industrials')]
-       Financials = df[0]['Symbol'][df[0]['GICS Sector'].str.contains(pat='Financials')]
-       Information_Technology  = df[0]['Symbol'][df[0]['GICS Sector'].str.contains(pat='Information Technology')]
-       Health_Care   = df[0]['Symbol'][df[0]['GICS Sector'].str.contains(pat='Health Care')]
-       Consumer_Discretionary = df[0]['Symbol'][df[0]['GICS Sector'].str.contains(pat='Consumer Discretionary')]
-       Consumer_Staples  = df[0]['Symbol'][df[0]['GICS Sector'].str.contains(pat='Consumer Staples')]
-       Utilities   = df[0]['Symbol'][df[0]['GICS Sector'].str.contains(pat='Utilities')]
-       Real_Estate  = df[0]['Symbol'][df[0]['GICS Sector'].str.contains(pat='Real Estate')]
-       Materials  = df[0]['Symbol'][df[0]['GICS Sector'].str.contains(pat='Materials')]
-       Communication_Services = df[0]['Symbol'][df[0]['GICS Sector'].str.contains(pat='Communication Services')]
-       Energy  = df[0]['Symbol'][df[0]['GICS Sector'].str.contains(pat='Energy')]
+        Industrials  = df[0]['Symbol'][df[0]['GICS Sector'].str.contains(pat='Industrials')]
+        Financials = df[0]['Symbol'][df[0]['GICS Sector'].str.contains(pat='Financials')]
+        Information_Technology  = df[0]['Symbol'][df[0]['GICS Sector'].str.contains(pat='Information Technology')]
+        Health_Care   = df[0]['Symbol'][df[0]['GICS Sector'].str.contains(pat='Health Care')]
+        Consumer_Discretionary = df[0]['Symbol'][df[0]['GICS Sector'].str.contains(pat='Consumer Discretionary')]
+        Consumer_Staples  = df[0]['Symbol'][df[0]['GICS Sector'].str.contains(pat='Consumer Staples')]
+        Utilities   = df[0]['Symbol'][df[0]['GICS Sector'].str.contains(pat='Utilities')]
+        Real_Estate  = df[0]['Symbol'][df[0]['GICS Sector'].str.contains(pat='Real Estate')]
+        Materials  = df[0]['Symbol'][df[0]['GICS Sector'].str.contains(pat='Materials')]
+        Communication_Services = df[0]['Symbol'][df[0]['GICS Sector'].str.contains(pat='Communication Services')]
+        Energy  = df[0]['Symbol'][df[0]['GICS Sector'].str.contains(pat='Energy')]
 
 
         
-       if   stock_industry == 'Industrials':
+        if   stock_industry == 'Industrials':
             try:
-               for ticker in Industrials:
-                   df = yf.download(ticker, start=start, end=end)['Adj Close']
-                   #df  = pdr.get_data_yahoo(ticker, start, end)['Adj Close'] 
-                   #cumulative daily return
-                   #rf  = df.pct_change().cumsum()
-                   rf =  (df.pct_change() + 1).cumprod()-1
-                   if len(df) > 0:
-                      data[ticker] = df
-                      return_df[ticker]  = rf*100
-
-            except:
-                pass
-        
-       elif stock_industry == 'Health_Care':
-            try:
-               for ticker in Health_Care:
-                   df = yf.download(ticker, start=start, end=end)['Adj Close']
-                   rf =  (df.pct_change() + 1).cumprod()-1
-                   if len(df) > 0:
-                      data[ticker] = df
-                      return_df[ticker]  = rf*100
-
-            except:
-                pass
-        
-       elif stock_industry == 'Information_Technology':
-            try:
-               for ticker in Information_Technology:
-                   df = yf.download(ticker, start=start, end=end)['Adj Close']
-                   rf =  (df.pct_change() + 1).cumprod()-1
-                   if len(df) > 0:
-                      data[ticker] = df
-                      return_df[ticker]  = rf*100
-
-            except:
-                pass
-        
-
-        
-       elif stock_industry == 'Utilities':
-            try:
-                for ticker in Utilities:
-                    df = yf.download(ticker, start=start, end=end)['Adj Close']
+                for ticker in Industrials:
+                    df = yf.download(ticker, start=start, end=end)['Close']
                     rf =  (df.pct_change() + 1).cumprod()-1
                     if len(df) > 0:
-                       data[ticker] = df
-                       return_df[ticker]  = rf*100
-            except:
-              pass
-       
-       
-       
-       elif stock_industry == 'Financials':
-            try:
-               for ticker in  Financials:
-                   df = yf.download(ticker, start=start, end=end)['Adj Close']
-                   rf =  (df.pct_change() + 1).cumprod()-1
-                   if len(df) > 0:
-                      data[ticker] = df
-                      return_df[ticker]  = rf*100
-
+                        download_data.append(df)
+                        return_data.append(rf*100)
             except:
                 pass
         
-       elif stock_industry == 'Materials':
+        elif stock_industry == 'Health_Care':
             try:
-               for ticker in  Materials :
-                   df = yf.download(ticker, start=start, end=end)['Adj Close']
-                   rf =  (df.pct_change() + 1).cumprod()-1
-                   if len(df) > 0:
-                      data[ticker] = df
-                      return_df[ticker]  = rf*100
+                for ticker in Health_Care:
+                    df = yf.download(ticker, start=start, end=end)['Close']
+                    rf =  (df.pct_change() + 1).cumprod()-1
+                    if len(df) > 0:
+                        download_data.append(df)
+                        return_data.append(rf*100)
             except:
-                pass                      
-        
-       elif stock_industry == 'Consumer_Discretionary':
+                pass
+        elif stock_industry == 'Information_Technology':
             try:
-               for ticker in  Consumer_Discretionary:
-                   df = yf.download(ticker, start=start, end=end)['Adj Close']
-                   rf =  (df.pct_change() + 1).cumprod()-1
-                   if len(df) > 0:
-                      data[ticker] = df
-                      return_df[ticker]  = rf*100  
+                for ticker in Health_Care:
+                    df = yf.download(ticker, start=start, end=end)['Close']
+                    rf =  (df.pct_change() + 1).cumprod()-1
+                    if len(df) > 0:
+                        download_data.append(df)
+                        return_data.append(rf*100)
             except:
-                pass                      
-
-       elif stock_industry == 'Real_Estate':
+                pass
+        elif stock_industry == 'Utilities':
             try:
-               for ticker in  Real_Estate:
-                   df = yf.download(ticker, start=start, end=end)['Adj Close']
-                   rf =  (df.pct_change() + 1).cumprod()-1
-                   if len(df) > 0:
-                      data[ticker] = df
-                      return_df[ticker]  = rf*100 
+                for ticker in Health_Care:
+                    df = yf.download(ticker, start=start, end=end)['Close']
+                    rf =  (df.pct_change() + 1).cumprod()-1
+                    if len(df) > 0:
+                        download_data.append(df)
+                        return_data.append(rf*100)
             except:
-                pass                      
-        
-        
-       elif stock_industry == 'Communication_Services':
+                pass
+        elif stock_industry == 'Financials':
             try:
-               for ticker in  Communication_Services:
-                   df = yf.download(ticker, start=start, end=end)['Adj Close']
-                   rf =  (df.pct_change() + 1).cumprod()-1
-                   if len(df) > 0:
-                      data[ticker] = df
-                      return_df[ticker]  = rf*100  
+                for ticker in Health_Care:
+                    df = yf.download(ticker, start=start, end=end)['Close']
+                    rf =  (df.pct_change() + 1).cumprod()-1
+                    if len(df) > 0:
+                        download_data.append(df)
+                        return_data.append(rf*100)
             except:
-                pass                      
-
-       elif stock_industry == 'Consumer_Staples':
+                pass
+        elif stock_industry == 'Materials':
             try:
-               for ticker in  Consumer_Staples:
-                   df = yf.download(ticker, start=start, end=end)['Adj Close']
-                   rf =  (df.pct_change() + 1).cumprod()-1
-                   if len(df) > 0:
-                      data[ticker] = df
-                      return_df[ticker]  = rf*100  
+                for ticker in Health_Care:
+                    df = yf.download(ticker, start=start, end=end)['Close']
+                    rf =  (df.pct_change() + 1).cumprod()-1
+                    if len(df) > 0:
+                        download_data.append(df)
+                        return_data.append(rf*100)
             except:
-                pass                      
-        
-        
-       elif stock_industry == 'Energy':
+                pass
+        elif stock_industry == 'Consumer_Discretionary':
             try:
-               for ticker in  Energy:
-                   df = yf.download(ticker, start=start, end=end)['Adj Close']
-                   rf =  (df.pct_change() + 1).cumprod()-1
-                   if len(df) > 0:
-                      data[ticker] = df
-                      return_df[ticker]  = rf*100                        
-
+                for ticker in Health_Care:
+                    df = yf.download(ticker, start=start, end=end)['Close']
+                    rf =  (df.pct_change() + 1).cumprod()-1
+                    if len(df) > 0:
+                        download_data.append(df)
+                        return_data.append(rf*100)
             except:
-     
-                pass   
+                pass
+        elif stock_industry ==  'Real_Estate':
+            try:
+                for ticker in Health_Care:
+                    df = yf.download(ticker, start=start, end=end)['Close']
+                    rf =  (df.pct_change() + 1).cumprod()-1
+                    if len(df) > 0:
+                        download_data.append(df)
+                        return_data.append(rf*100)
+            except:
+                pass
+        elif stock_industry == 'Communication_Services':
+            try:
+                for ticker in Health_Care:
+                    df = yf.download(ticker, start=start, end=end)['Close']
+                    rf =  (df.pct_change() + 1).cumprod()-1
+                    if len(df) > 0:
+                        download_data.append(df)
+                        return_data.append(rf*100)
+            except:
+                pass
+        elif stock_industry == 'Consumer_Staples':
+            try:
+                for ticker in Health_Care:
+                    df = yf.download(ticker, start=start, end=end)['Close']
+                    rf =  (df.pct_change() + 1).cumprod()-1
+                    if len(df) > 0:
+                        download_data.append(df)
+                        return_data.append(rf*100)
+            except:
+                pass  
+        elif stock_industry == 'Energy':
+            try:
+                for ticker in Health_Care:
+                    df = yf.download(ticker, start=start, end=end)['Close']
+                    rf =  (df.pct_change() + 1).cumprod()-1
+                    if len(df) > 0:
+                        download_data.append(df)
+                        return_data.append(rf*100)
+            except:
+                pass    
+    
 
     elif stock_type == 'Broad Market':
         
         try:
-           for ticker in  tickers:
-                df = yf.download(ticker, start=start, end=end)['Adj Close']
+            for ticker in  tickers:
+                df = yf.download(ticker, start=start, end=end)['Close']
                 rf =  (df.pct_change() + 1).cumprod()-1
                 if len(df) > 0:
-                    data[ticker] = df
-                    return_df[ticker]  = rf*100  
+                   download_data.append(df)
+                   return_data.append(rf*100)
 
         except:
      
             pass     
-           
-    return return_df
+    
+    return pd.concat(return_data,axis=1)      
+ 
 
+# Create a dropdown menu to choose the graph type
+#graph_type = st.selectbox('Select Graph Type 1', ['Bar Chart', 'Line Chart'])
+#return_df = get_stock(stock_type_selected,stock_industry_selected,tickers_selected_list)
+#return_df['Year']  = return_df.index.year.astype(str)
+#st.dataframe(return_df.head())
 
 
 # Create a dropdown menu to choose the graph type
 graph_type = st.selectbox('Select Graph Type 1', ['Bar Chart', 'Line Chart'])
 return_df = get_stock(stock_type_selected,stock_industry_selected,tickers_selected_list)
-return_df['Year']  = return_df.index.year.astype(str)
-
+return_df.reset_index(inplace =True)
+#return_df['Year']  = return_df.index.year.astype(str)
+return_df['Year'] = return_df.loc[:,'Date'].dt.year.astype(str)
+stock_list =  list(set(return_df.columns).difference(['Year']))
 
 #['S & P 500 Stocks', 'Broad Market'], stock_industry_selected
 if  stock_type_selected == 'S & P 500 Stocks':
     
     #return_df.drop('Date',axis=1,inplace=True)
     return_df.reset_index(drop=True, inplace=True)
-    stock_list =  list(set(return_df.columns).difference('Year'))
+    #stock_list =  list(set(return_df.columns).difference('Year'))
     #d = return_df.drop('Year',axis=1).mean().reset_index().rename(columns= {'index':'Stock',0:'Mean_Return'}).sort_values(by='Mean_Return',ascending=False)
     #d = return_df[list(stock_industry_selected) + ['Year']].groupby('Year').mean().reset_index().melt(id_vars ='Year',value_vars=list(stock_industry_selected))
-    d = return_df.groupby('Year').mean().reset_index().melt(id_vars ='Year',value_vars= stock_list)
+    d = return_df[stock_list + ['Year']].groupby('Year').mean().reset_index().melt(id_vars ='Year',value_vars= stock_list)
 else:
     #tickers_selected_list = tickers_selected
-    d = return_df[list(tickers_selected_list) + ['Year']].groupby('Year').mean().reset_index().melt(id_vars ='Year',value_vars= list(tickers_selected_list))
+    fig=return_df[stock_list].plot(color_discrete_sequence=px.colors.qualitative.Set1,title= f"Mean Return Between {start} to {end}")
 
 
 
@@ -243,15 +223,15 @@ def generate_graph(graph_type):
         
         if stock_type_selected == 'S & P 500 Stocks':
             #fig = px.bar(d, x="Stock", y="Mean_Return", orientation='v',title= f"Mean Return Between {start} to {end}", color="Stock",color_discrete_sequence=px.colors.qualitative.Set1)
-            fig = px.bar(d, x="Year", y="value", orientation='v',title= f"Mean Return Between {start} to {end}", color="variable",color_discrete_sequence=px.colors.qualitative.Set1, barmode="group")
+            fig = px.bar(d, x="Year", y="value", orientation='v',title= f"Mean Return Between {start} to {end}", color="Ticker",color_discrete_sequence=px.colors.qualitative.Set1, barmode="group")
             fig.update_layout(yaxis_title="Mean Return (%)")            
         
         else:
-            fig = px.bar(d, x="Year", y="value", orientation='v',title= f"Mean Return Between {start} to {end}", color="variable",color_discrete_sequence=px.colors.qualitative.Set1, barmode="group")
+            fig = px.bar(d, x="Year", y="value", orientation='v',title= f"Mean Return Between {start} to {end}", color="Ticker",color_discrete_sequence=px.colors.qualitative.Set1, barmode="group")
             fig.update_layout(yaxis_title="Mean Return (%)")
 
     elif graph_type == 'Line Chart':
-        fig=return_df[tickers_selected_list].plot(color_discrete_sequence=px.colors.qualitative.Set1,title= f"Mean Return Between {start} to {end}")
+        fig=return_df[stock_list].plot(color_discrete_sequence=px.colors.qualitative.Set1,title= f"Mean Return Between {start} to {end}")
         fig.update_layout(yaxis_title="Daily Return (%)")
         fig.update_xaxes(tickangle=45)
 
