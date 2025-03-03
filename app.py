@@ -65,8 +65,8 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
        if   stock_industry == 'Industrials':
             try:
                for ticker in Industrials:
-                   df = yf.download(ticker, start=start, end=end)['Close']
-                   #df  = pdr.get_data_yahoo(ticker, start, end)['Close'] 
+                   df = yf.download(ticker, start=start, end=end)['Adj Close']
+                   #df  = pdr.get_data_yahoo(ticker, start, end)['Adj Close'] 
                    #cumulative daily return
                    #rf  = df.pct_change().cumsum()
                    rf =  (df.pct_change() + 1).cumprod()-1
@@ -80,7 +80,7 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
        elif stock_industry == 'Health_Care':
             try:
                for ticker in Health_Care:
-                   df = yf.download(ticker, start=start, end=end)['Close']
+                   df = yf.download(ticker, start=start, end=end)['Adj Close']
                    rf =  (df.pct_change() + 1).cumprod()-1
                    if len(df) > 0:
                       data[ticker] = df
@@ -92,7 +92,7 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
        elif stock_industry == 'Information_Technology':
             try:
                for ticker in Information_Technology:
-                   df = yf.download(ticker, start=start, end=end)['Close']
+                   df = yf.download(ticker, start=start, end=end)['Adj Close']
                    rf =  (df.pct_change() + 1).cumprod()-1
                    if len(df) > 0:
                       data[ticker] = df
@@ -106,7 +106,7 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
        elif stock_industry == 'Utilities':
             try:
                 for ticker in Utilities:
-                    df = yf.download(ticker, start=start, end=end)['Close']
+                    df = yf.download(ticker, start=start, end=end)['Adj Close']
                     rf =  (df.pct_change() + 1).cumprod()-1
                     if len(df) > 0:
                        data[ticker] = df
@@ -119,7 +119,7 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
        elif stock_industry == 'Financials':
             try:
                for ticker in  Financials:
-                   df = yf.download(ticker, start=start, end=end)['Close']
+                   df = yf.download(ticker, start=start, end=end)['Adj Close']
                    rf =  (df.pct_change() + 1).cumprod()-1
                    if len(df) > 0:
                       data[ticker] = df
@@ -131,7 +131,7 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
        elif stock_industry == 'Materials':
             try:
                for ticker in  Materials :
-                   df = yf.download(ticker, start=start, end=end)['Close']
+                   df = yf.download(ticker, start=start, end=end)['Adj Close']
                    rf =  (df.pct_change() + 1).cumprod()-1
                    if len(df) > 0:
                       data[ticker] = df
@@ -142,7 +142,7 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
        elif stock_industry == 'Consumer_Discretionary':
             try:
                for ticker in  Consumer_Discretionary:
-                   df = yf.download(ticker, start=start, end=end)['Close']
+                   df = yf.download(ticker, start=start, end=end)['Adj Close']
                    rf =  (df.pct_change() + 1).cumprod()-1
                    if len(df) > 0:
                       data[ticker] = df
@@ -153,7 +153,7 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
        elif stock_industry == 'Real_Estate':
             try:
                for ticker in  Real_Estate:
-                   df = yf.download(ticker, start=start, end=end)['Close']
+                   df = yf.download(ticker, start=start, end=end)['Adj Close']
                    rf =  (df.pct_change() + 1).cumprod()-1
                    if len(df) > 0:
                       data[ticker] = df
@@ -165,7 +165,7 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
        elif stock_industry == 'Communication_Services':
             try:
                for ticker in  Communication_Services:
-                   df = yf.download(ticker, start=start, end=end)['Close']
+                   df = yf.download(ticker, start=start, end=end)['Adj Close']
                    rf =  (df.pct_change() + 1).cumprod()-1
                    if len(df) > 0:
                       data[ticker] = df
@@ -176,7 +176,7 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
        elif stock_industry == 'Consumer_Staples':
             try:
                for ticker in  Consumer_Staples:
-                   df = yf.download(ticker, start=start, end=end)['Close']
+                   df = yf.download(ticker, start=start, end=end)['Adj Close']
                    rf =  (df.pct_change() + 1).cumprod()-1
                    if len(df) > 0:
                       data[ticker] = df
@@ -188,7 +188,7 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
        elif stock_industry == 'Energy':
             try:
                for ticker in  Energy:
-                   df = yf.download(ticker, start=start, end=end)['Close']
+                   df = yf.download(ticker, start=start, end=end)['Adj Close']
                    rf =  (df.pct_change() + 1).cumprod()-1
                    if len(df) > 0:
                       data[ticker] = df
@@ -202,7 +202,7 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
         
         try:
            for ticker in  tickers:
-                df = yf.download(ticker, start=start, end=end)['Close']
+                df = yf.download(ticker, start=start, end=end)['Adj Close']
                 rf =  (df.pct_change() + 1).cumprod()-1
                 if len(df) > 0:
                     data[ticker] = df
@@ -219,9 +219,68 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
 # Create a dropdown menu to choose the graph type
 graph_type = st.selectbox('Select Graph Type 1', ['Bar Chart', 'Line Chart'])
 return_df = get_stock(stock_type_selected,stock_industry_selected,tickers_selected_list)
-#return_df['Year']  = return_df.index.year.astype(str)
-
-st.dataframe(return_df.head())
+return_df['Year']  = return_df.index.year.astype(str)
 
 
+#['S & P 500 Stocks', 'Broad Market'], stock_industry_selected
+if  stock_type_selected == 'S & P 500 Stocks':
+    
+    #return_df.drop('Date',axis=1,inplace=True)
+    return_df.reset_index(drop=True, inplace=True)
+    stock_list =  list(set(return_df.columns).difference('Year'))
+    #d = return_df.drop('Year',axis=1).mean().reset_index().rename(columns= {'index':'Stock',0:'Mean_Return'}).sort_values(by='Mean_Return',ascending=False)
+    #d = return_df[list(stock_industry_selected) + ['Year']].groupby('Year').mean().reset_index().melt(id_vars ='Year',value_vars=list(stock_industry_selected))
+    d = return_df.groupby('Year').mean().reset_index().melt(id_vars ='Year',value_vars= stock_list)
+else:
+    #tickers_selected_list = tickers_selected
+    d = return_df[list(tickers_selected_list) + ['Year']].groupby('Year').mean().reset_index().melt(id_vars ='Year',value_vars= list(tickers_selected_list))
 
+
+
+# Create a function to generate the graph
+def generate_graph(graph_type):
+    if graph_type == 'Bar Chart':
+        
+        if stock_type_selected == 'S & P 500 Stocks':
+            #fig = px.bar(d, x="Stock", y="Mean_Return", orientation='v',title= f"Mean Return Between {start} to {end}", color="Stock",color_discrete_sequence=px.colors.qualitative.Set1)
+            fig = px.bar(d, x="Year", y="value", orientation='v',title= f"Mean Return Between {start} to {end}", color="variable",color_discrete_sequence=px.colors.qualitative.Set1, barmode="group")
+            fig.update_layout(yaxis_title="Mean Return (%)")            
+        
+        else:
+            fig = px.bar(d, x="Year", y="value", orientation='v',title= f"Mean Return Between {start} to {end}", color="variable",color_discrete_sequence=px.colors.qualitative.Set1, barmode="group")
+            fig.update_layout(yaxis_title="Mean Return (%)")
+
+    elif graph_type == 'Line Chart':
+        fig=return_df[tickers_selected_list].plot(color_discrete_sequence=px.colors.qualitative.Set1,title= f"Mean Return Between {start} to {end}")
+        fig.update_layout(yaxis_title="Daily Return (%)")
+        fig.update_xaxes(tickangle=45)
+
+    return fig
+
+# Create a Streamlit app
+st.title('Graph App')
+st.write('Select a graph type to display:')
+graph_type_selected = st.selectbox('Select Graph Type 2', ['Bar Chart', 'Line Chart'])
+fig = generate_graph(graph_type_selected)
+st.plotly_chart(fig, use_container_width=True)
+
+
+
+
+# Create a Streamlit app
+#st.title('Returns Chart')
+#st.write(f'{tickers_selected_list + ['Year']}')
+#graph_type_selected = st.selectbox('Select Graph Type 2', ['Bar Chart', 'Line Chart', 'Scatter Plot'])
+#fig = generate_graph(graph_type_selected)
+
+#d = get_stock(stock_type_selected,stock_industry_selected).mean().reset_index().rename(columns= {'index':'Stock',0:'Mean_Return'}).sort_values(by='Mean_Return',ascending=False)
+#fig = px.bar(d, x="Stock", y="Mean_Return", orientation='v',title= f"Mean Return Between {start} to {end}", color="Stock",color_discrete_sequence=px.colors.qualitative.Set1)
+#fig.update_layout(yaxis_title="Mean Return (%)")
+#st.plotly_chart(fig, use_container_width=True)
+# Format y-axis as percentage
+#fig.update_yaxes(tickformat=".0%")
+#st.plotly_chart(fig, use_container_width=True)
+#st.dataframe(d.rename(columns={'value':'Mean Return %'}))
+#st.dataframe(return_df.head())
+st.dataframe(d)
+#fig.show()
