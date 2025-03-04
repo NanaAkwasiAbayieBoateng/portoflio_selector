@@ -4,6 +4,8 @@ import yfinance as yf
 import datetime as dt
 import pandas as pd
 import plotly.express as px
+import logging
+logging.basicConfig(level=logging.INFO)  # Configure logging
 pd.options.plotting.backend = "plotly"
 
 
@@ -30,8 +32,6 @@ default_end_date  = dt.datetime(dt.date.today().year, dt.date.today().month, dt.
 start =   st.text_input("Enter start date", value="", max_chars= 10, placeholder= default_start_date, disabled=False, label_visibility="visible")
 end =     st.text_input("Enter start date", value="", max_chars= 10, placeholder= default_end_date, disabled=False, label_visibility="visible")
 
-#start = '2025-01-01'
-#end  = '2025-01-15'
 
 
 
@@ -65,8 +65,9 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
                     if len(df) > 0:
                         download_data.append(df)
                         return_data.append(rf*100)
-            except:
+            except Exception as e:
                 pass
+                logging.error(f"Error downloading ticker {ticker}: {e}")
         
         elif stock_industry == 'Health_Care':
             try:
@@ -76,8 +77,10 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
                     if len(df) > 0:
                         download_data.append(df)
                         return_data.append(rf*100)
-            except:
+            except Exception as e:
                 pass
+                logging.error(f"Error downloading ticker {ticker}: {e}")
+                
         elif stock_industry == 'Information_Technology':
             try:
                 for ticker in Health_Care:
@@ -86,8 +89,10 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
                     if len(df) > 0:
                         download_data.append(df)
                         return_data.append(rf*100)
-            except:
+            except Exception as e:
                 pass
+                logging.error(f"Error downloading ticker {ticker}: {e}")
+                
         elif stock_industry == 'Utilities':
             try:
                 for ticker in Health_Care:
@@ -96,8 +101,10 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
                     if len(df) > 0:
                         download_data.append(df)
                         return_data.append(rf*100)
-            except:
+            except Exception as e:
                 pass
+                logging.error(f"Error downloading ticker {ticker}: {e}")
+                
         elif stock_industry == 'Financials':
             try:
                 for ticker in Health_Care:
@@ -106,8 +113,10 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
                     if len(df) > 0:
                         download_data.append(df)
                         return_data.append(rf*100)
-            except:
+            except Exception as e:
                 pass
+                logging.error(f"Error downloading ticker {ticker}: {e}")
+                
         elif stock_industry == 'Materials':
             try:
                 for ticker in Health_Care:
@@ -116,8 +125,10 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
                     if len(df) > 0:
                         download_data.append(df)
                         return_data.append(rf*100)
-            except:
+            except Exception as e:
                 pass
+                logging.error(f"Error downloading ticker {ticker}: {e}")
+                
         elif stock_industry == 'Consumer_Discretionary':
             try:
                 for ticker in Health_Care:
@@ -126,8 +137,10 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
                     if len(df) > 0:
                         download_data.append(df)
                         return_data.append(rf*100)
-            except:
+            except Exception as e:
                 pass
+                logging.error(f"Error downloading ticker {ticker}: {e}")
+                
         elif stock_industry ==  'Real_Estate':
             try:
                 for ticker in Health_Care:
@@ -136,8 +149,10 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
                     if len(df) > 0:
                         download_data.append(df)
                         return_data.append(rf*100)
-            except:
+            except Exception as e:
                 pass
+                logging.error(f"Error downloading ticker {ticker}: {e}")
+                
         elif stock_industry == 'Communication_Services':
             try:
                 for ticker in Health_Care:
@@ -146,8 +161,10 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
                     if len(df) > 0:
                         download_data.append(df)
                         return_data.append(rf*100)
-            except:
+            except Exception as e:
                 pass
+                logging.error(f"Error downloading ticker {ticker}: {e}")
+                
         elif stock_industry == 'Consumer_Staples':
             try:
                 for ticker in Health_Care:
@@ -156,8 +173,10 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
                     if len(df) > 0:
                         download_data.append(df)
                         return_data.append(rf*100)
-            except:
-                pass  
+            except Exception as e:
+                pass
+                logging.error(f"Error downloading ticker {ticker}: {e}")
+                
         elif stock_industry == 'Energy':
             try:
                 for ticker in Health_Care:
@@ -166,8 +185,9 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
                     if len(df) > 0:
                         download_data.append(df)
                         return_data.append(rf*100)
-            except:
-                pass    
+            except Exception as e:
+                pass
+                logging.error(f"Error downloading ticker {ticker}: {e}")  
     
 
     elif stock_type == 'Broad Market':
@@ -180,87 +200,127 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
                    download_data.append(df)
                    return_data.append(rf*100)
 
-        except:
-     
-            pass     
-    
-    return pd.concat(return_data,axis=1)      
- 
+        except Exception as e:
+             pass
+             logging.error(f"Error downloading ticker {ticker}: {e}")
+            
+    #df  =  pd.concat(return_data,axis=1)
+    #df = df.loc[:,~df.columns.duplicated()].copy()
+    if return_data:  # Check if return_data is not empty
+        df = pd.concat(return_data, axis=1)
+        df = df.loc[:,~df.columns.duplicated()].copy()
+        return df
+    else:
+        return pd.DataFrame()  # Return an empty DataFrame if return_data is empty
+        logging.info(f"dataframe empty")
+    return df     
 
-# Create a dropdown menu to choose the graph type
-#graph_type = st.selectbox('Select Graph Type 1', ['Bar Chart', 'Line Chart'])
-#return_df = get_stock(stock_type_selected,stock_industry_selected,tickers_selected_list)
-#return_df['Year']  = return_df.index.year.astype(str)
-#st.dataframe(return_df.head())
+
+
+
+
+
+
 
 
 # Create a dropdown menu to choose the graph type
 graph_type = st.selectbox('Select Graph Type 1', ['Bar Chart', 'Line Chart'])
 return_df = get_stock(stock_type_selected,stock_industry_selected,tickers_selected_list)
 return_df.reset_index(inplace =True)
-#return_df['Year']  = return_df.index.year.astype(str)
-return_df['Year'] = return_df.loc[:,'Date'].dt.year.astype(str)
+return_df['Year'] = return_df.reset_index().loc[:,'Date'].dt.year.astype(str)
 stock_list =  list(set(return_df.columns).difference(['Year','Ticker','Date']))
+#st.dataframe(return_df.head())
+#st.dataframe(pd.DataFrame(return_df.columns))
 
 #['S & P 500 Stocks', 'Broad Market'], stock_industry_selected
 if  stock_type_selected == 'S & P 500 Stocks':
     
-    #return_df.drop('Date',axis=1,inplace=True)
-    return_df.reset_index(drop=True, inplace=True)
-    #stock_list =  list(set(return_df.columns).difference('Year'))
-    #d = return_df.drop('Year',axis=1).mean().reset_index().rename(columns= {'index':'Stock',0:'Mean_Return'}).sort_values(by='Mean_Return',ascending=False)
-    #d = return_df[list(stock_industry_selected) + ['Year']].groupby('Year').mean().reset_index().melt(id_vars ='Year',value_vars=list(stock_industry_selected))
+
+    
     d = return_df[stock_list + ['Year']].groupby('Year').mean().reset_index().melt(id_vars ='Year',value_vars= stock_list)
 else:
     #tickers_selected_list = tickers_selected
-    fig=return_df[stock_list].plot(color_discrete_sequence=px.colors.qualitative.Set1,title= f"Mean Return Between {start} to {end}")
+    d = return_df[list(tickers_selected_list) + ['Year']].groupby('Year').mean().reset_index().melt(id_vars ='Year',value_vars= list(tickers_selected_list))
 
 
 
 # Create a function to generate the graph
-def generate_graph(graph_type):
+
+
+
+# Assuming return_df, tickers_selected_list, start, end, and stock_type_selected are defined elsewhere
+
+def generate_graph(graph_type, stock_type_selected):
+    fig = None  # Initialize fig
+
     if graph_type == 'Bar Chart':
-        
-        if stock_type_selected == 'S & P 500 Stocks':
-            #fig = px.bar(d, x="Stock", y="Mean_Return", orientation='v',title= f"Mean Return Between {start} to {end}", color="Stock",color_discrete_sequence=px.colors.qualitative.Set1)
-            fig = px.bar(d, x="Year", y="value", orientation='v',title= f"Mean Return Between {start} to {end}", color="Ticker",color_discrete_sequence=px.colors.qualitative.Set1, barmode="group")
-            fig.update_layout(yaxis_title="Mean Return (%)")            
-        
+        if 'd' in locals() or 'd' in globals():
+            try:
+                fig = px.bar(
+                    d,
+                    x="Year",
+                    y="value",
+                    orientation='v',
+                    title=f"Mean Return Between {start} to {end}",
+                    color="Ticker",
+                    color_discrete_sequence=px.colors.qualitative.Set1,
+                    barmode="group",
+                )
+                fig.update_layout(yaxis_title="Mean Return (%)")
+            except Exception as e:
+                st.error(f"Error creating Bar Chart: {e}")
+                fig = px.bar()
         else:
-            fig = px.bar(d, x="Year", y="value", orientation='v',title= f"Mean Return Between {start} to {end}", color="Ticker",color_discrete_sequence=px.colors.qualitative.Set1, barmode="group")
-            fig.update_layout(yaxis_title="Mean Return (%)")
+            st.error("DataFrame 'd' is not defined.")
+            fig = px.bar()
 
-    elif graph_type == 'Line Chart':
-        fig=return_df[stock_list].plot(color_discrete_sequence=px.colors.qualitative.Set1,title= f"Mean Return Between {start} to {end}")
-        fig.update_layout(yaxis_title="Daily Return (%)")
-        fig.update_xaxes(tickangle=45)
-
+    elif graph_type == 'Line Chart' and stock_type_selected == 'Broad Market':
+        if return_df is not None and not return_df.empty and tickers_selected_list:
+            try:
+                fig = px.line(
+                    return_df[tickers_selected_list +['Date']].set_index('Date'),
+                    title=f" Return Between {start} to {end}",
+                    color_discrete_sequence=px.colors.qualitative.Set1,
+                )
+                fig.update_layout(yaxis_title="Daily Return (%)")
+                fig.update_xaxes(tickangle=45)
+            except Exception as e:
+                st.error(f"Error creating Line Chart: {e}")
+                fig = px.line()
+        else:
+            st.error("Data for Line Chart is missing or invalid.")
+            fig = px.line()
+    elif graph_type == 'Line Chart' and stock_type_selected == 'S & P 500 Stocks':
+        if return_df is not None and not return_df.empty and tickers_selected_list:
+            try:
+                fig = px.line(
+                    return_df[stock_list +['Date']].set_index('Date'),
+                    title=f" Return Between {start} to {end}",
+                    color_discrete_sequence=px.colors.qualitative.Set1,
+                )
+                fig.update_layout(yaxis_title="Daily Return (%)")
+                fig.update_xaxes(tickangle=45)
+            except Exception as e:
+                st.error(f"Error creating Line Chart: {e}")
+                fig = px.line()
+        else:
+            st.error("Data for Line Chart is missing or invalid.")
+            fig = px.line()
+        
+    print(f"Generated fig: {fig}") #debug print
     return fig
 
 # Create a Streamlit app
 st.title('Graph App')
 st.write('Select a graph type to display:')
 graph_type_selected = st.selectbox('Select Graph Type 2', ['Bar Chart', 'Line Chart'])
-fig = generate_graph(graph_type_selected)
+fig = generate_graph(graph_type_selected,stock_type_selected)
 st.plotly_chart(fig, use_container_width=True)
-
-
-
-
-# Create a Streamlit app
-#st.title('Returns Chart')
-#st.write(f'{tickers_selected_list + ['Year']}')
-#graph_type_selected = st.selectbox('Select Graph Type 2', ['Bar Chart', 'Line Chart', 'Scatter Plot'])
-#fig = generate_graph(graph_type_selected)
-
-#d = get_stock(stock_type_selected,stock_industry_selected).mean().reset_index().rename(columns= {'index':'Stock',0:'Mean_Return'}).sort_values(by='Mean_Return',ascending=False)
-#fig = px.bar(d, x="Stock", y="Mean_Return", orientation='v',title= f"Mean Return Between {start} to {end}", color="Stock",color_discrete_sequence=px.colors.qualitative.Set1)
-#fig.update_layout(yaxis_title="Mean Return (%)")
-#st.plotly_chart(fig, use_container_width=True)
-# Format y-axis as percentage
-#fig.update_yaxes(tickformat=".0%")
-#st.plotly_chart(fig, use_container_width=True)
-#st.dataframe(d.rename(columns={'value':'Mean Return %'}))
-#st.dataframe(return_df.head())
 st.dataframe(d)
-#fig.show()
+
+
+
+
+
+
+
