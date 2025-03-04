@@ -227,7 +227,7 @@ def get_stock(stock_type,stock_industry=None,tickers=None):
 graph_type = st.selectbox('Select Graph Type 1', ['Bar Chart', 'Line Chart'])
 return_df = get_stock(stock_type_selected,stock_industry_selected,tickers_selected_list)
 return_df.reset_index(inplace =True)
-return_df['Year'] = return_df.reset_index().loc[:,'Date'].dt.year.astype(str)
+return_df['Year'] = return_df.loc[:,'Date'].dt.year.astype(str)
 stock_list =  list(set(return_df.columns).difference(['Year','Ticker','Date']))
 #st.dataframe(return_df.head())
 #st.dataframe(pd.DataFrame(return_df.columns))
